@@ -1,0 +1,19 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+
+environment:
+  matrix:
+  - PlatformToolset: v140_xp
+    PLATFORM: amd64
+    PYTHONTEST: x64
+    PYTHON: "C:\\Python37"
+
+install:
+    - SET PATH=%PYTHON%;%PATH%
+    - python -m pip install requests jsonschema rfc3987 pywin32 lxml
+
+
+build_script:
+    - cd "%APPVEYOR_BUILD_FOLDER%"
+    - call python validator.py %PYTHONTEST%
