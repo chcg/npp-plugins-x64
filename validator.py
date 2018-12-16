@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-import lxml.etree
-from xml.dom import minidom
+try:
+    from lxml import etree
+except ImportError:
+    import xml.etree.cElementTree as etree
 import os
 import io
 import sys
@@ -43,16 +45,16 @@ def post_error(message):
 # validate xml against a schema
 def validateXML(xml_file, xsd_file):
 	print('XML schema for validation metadata: ' + xsd_file)
-	schema = lxml.etree.XMLSchema( lxml.etree.parse( xsd_file ) )
+	schema = etree.XMLSchema( etree.parse( xsd_file ) )
 	try:
-		xml_tree = lxml.etree.parse( xml_file )
+		xml_tree = etree.parse( xml_file )
 		schema.assertValid(xml_tree)
 		print('Validating metadata against XML schema\tOK')
-	except lxml.etree.XMLSyntaxError as error:
+	except etree.XMLSyntaxError as error:
 		print('Validating metadata against XML schema\tERROR XML Syntax Error. Document cannot be parsed.\n ' + str(error.error_log))
 		post_error("validateXML - " + str(error))
 
-	except lxml.etree.DocumentInvalid as error:
+	except etree.DocumentInvalid as error:
 		print('Validating metadata against XML schema\tERROR Document Invalid Exception.\n ' + str(error.error_log))
 		post_error("validateXML - " + str(error))
 
@@ -75,20 +77,18 @@ def parse(xmlfilename, filename):
     for error in schema.iter_errors(pl):
         post_error(error.message)
 
-    dom = minidom.parse( xmlfilename );
+    xml_root = etree.parse( xmlfilename )
 
     os.mkdir("./" + bitness_from_input)
-    for plugin in dom.getElementsByTagName( "plugin" ):
-        pluginname = ""
-        if( plugin.hasAttribute("name") ):
-            pluginname = plugin.attributes["name"].value
-            print(pluginname)
+    for plugin in xml_root.findall( "plugin" ):
+        pluginname = plugin.get("name")
+        print(pluginname)
 
-        pluginDownloadLoacation = plugin.getElementsByTagName( "download" )
-        print(pluginDownloadLoacation.firstChild.data)
+        pluginDownloadLocation = plugin.findtext( ".//download" )
+        print(pluginDownloadLocation)
 
         try:
-            response = requests.get(plugin.firstChild.data)
+            response = requests.get(pluginDownloadLocation)
         except requests.exceptions.RequestException as e:
             post_error(str(e))
             continue
@@ -127,8 +127,7 @@ def parse(xmlfilename, filename):
         with zip.open(dll_name) as dll_file, open("./" + bitness_from_input + "/" + dll_name, 'wb') as f:
             f.write(dll_file.read())
 
-        versionInfo = plugin.getElementsByTagName( "x64Version" )
-        version = versionInfo.firstChild.data
+        version = plugin.findtext( "x64Version" )
         print(version)
 
         # Fill in any of the missing numbers as zeros
