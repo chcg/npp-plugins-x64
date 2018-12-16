@@ -78,8 +78,14 @@ def parse(xmlfilename, filename):
     dom = minidom.parse( xmlfilename );
 
     os.mkdir("./" + bitness_from_input)
-    for plugin in dom.getElementsByTagName( "download" ):
-        print(plugin.firstChild.data)
+    for plugin in dom.getElementsByTagName( "plugin" ):
+        pluginname = ""
+        if( plugin.hasAttribute("name") ):
+            pluginname = plugin.attributes["name"].value
+            print(pluginname)
+
+        pluginDownloadLoacation = plugin.getElementsByTagName( "download" )
+        print(pluginDownloadLoacation.firstChild.data)
 
         try:
             response = requests.get(plugin.firstChild.data)
@@ -88,24 +94,25 @@ def parse(xmlfilename, filename):
             continue
 
         if response.status_code != 200:
-            post_error(f'{plugin["display-name"]}: failed to download plugin. Returned code {response.status_code}')
+            post_error(f'{pluginname}: failed to download plugin. Returned code {response.status_code}')
             continue
 
         # Hash it and make sure its what is expected
         #hash = sha256(response.content).hexdigest()
         #if plugin["id"].lower() != hash.lower():
-        #    post_error(f'{plugin["display-name"]}: Invalid hash. Got {hash.lower()} but expected {plugin["id"]}')
+        #    post_error(f'{pluginname}: Invalid hash. Got {hash.lower()} but expected {plugin["id"]}')
         #    continue
 
         # Make sure its a valid zip file
         try:
             zip = zipfile.ZipFile(io.BytesIO(response.content))
         except zipfile.BadZipFile as e:
-            post_error(f'{plugin["display-name"]}: Invalid zip file')
+            post_error(f'{pluginname}: Invalid zip file')
             continue
 
         # The expected DLL name
-        dll_name = f'{plugin["folder-name"]}.dll'.lower()
+        # TODO check how to find dll name from pluginname
+        dll_name = f'{pluginname}.dll'.lower()
 
         # Notepad++ is not case sensitive, but extracting files from the zip is,
         # so find the exactfile name to use
@@ -114,13 +121,15 @@ def parse(xmlfilename, filename):
                 dll_name = file
                 break
         else:
-            post_error(f'{plugin["display-name"]}: Zip file does not contain {plugin["folder-name"]}.dll')
+            post_error(f'{pluginname}: Zip file does not contain {dll_name}')
             continue
 
         with zip.open(dll_name) as dll_file, open("./" + bitness_from_input + "/" + dll_name, 'wb') as f:
             f.write(dll_file.read())
 
-        version = plugin["version"]
+        versionInfo = plugin.getElementsByTagName( "x64Version" )
+        version = versionInfo.firstChild.data
+        print(version)
 
         # Fill in any of the missing numbers as zeros
         version = version + (3 - version.count('.')) * ".0"
@@ -128,11 +137,11 @@ def parse(xmlfilename, filename):
         try:
             dll_version = get_version_number("./" + bitness_from_input + "/" + dll_name)
         except win32api.error:
-            post_error(f'{plugin["display-name"]}: Does not contain any version information')
+            post_error(f'{pluginname}: Does not contain any version information')
             continue
 
         if dll_version != version:
-            post_error(f'{plugin["display-name"]}: Unexpected DLL version. DLL is {dll_version} but expected {version}')
+            post_error(f'{pluginname}: Unexpected DLL version. DLL is {dll_version} but expected {version}')
             continue
 
 
