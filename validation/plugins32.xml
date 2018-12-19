@@ -2354,9 +2354,6 @@
 		<latestUpdate>2018-12-01  V2.1.1</latestUpdate>
 		<stability>Good</stability>
 		<minVersion>99.9</minVersion>
-		<install>
-			<unicode/>
-		</install>
 	</plugin>
 	<plugin name="RegEx Helper">
 		<unicodeVersion>0.2.3</unicodeVersion>
@@ -3222,9 +3219,6 @@
 		<author>Simon HE</author>
 		<latestUpdate>ViSimulator for notepad++ 0.4.0.1093 \nFIXED: 'G' may result in Notepad++ frozen when "Clickable Link" of Notepad++ enabled (enabled in default), to avoid this, there are three methods: \n1). update ViSimulator to version 0.4.0.1093 or above, in the new version, some work was done to get around the bug of "Clickable Link".\n2). disable "Clickable Link" option of Notepad++ -- recommended\nclick at menu [Settings-&gt;Preference] to open the settings dialog, then, click at the [Misc] at the bottom of the left list on the dialog just opened, at last, uncheck "Clickable Link" and save the settings. \n3). Wait for Notepad++ to release version 6.5.5 or above, it will fix this.\nFIXED: 'H' 'L' 'M' will go to right line in wrap mode.\nFIXED: 'zt' 'zb' 'z&lt;return&gt;' 'z-' will scroll to right position in wrap mode.\nFIXED: 'ctrl-u' 'ctrl-d' will scroll right count of lines and go to right position in wrap mode.\nViSimulator for notepad++ 0.4.0.1073 \nFIXED: In visual mode, when caret moved out of view window, the view does not scroll to make caret visible \nADDED: Support text object of [] {} &lt;&gt; "" '' . the following commands can be used in NORMAL mode: \nci] ci[ ci} ci{ ci&gt; ci&lt; ci" ci' ca] ca[ ca} ca{ ca&gt; ca&lt; ca" ca' \ndi] di[ di} di{ di&gt; di&lt; di" di' da] da[ da} da{ da&gt; da&lt; da" da'\nyi] yi[ yi} yi{ yi&gt; yi&lt; yi" yi' ya] ya[ ya} ya{ ya&gt; ya&lt; ya" ya' \nADDED:/ ? search forwards and backwards. you can use regular expression in search command. \nADDED: history for command line of ex command and search \nIMPROVED: command bar display \nViSimulator for notepad++ 0.3.6.868 \nADDED: Press ctrl-shift-alt-v shortcut to toggle ViSimulator enabled or disabled. \nADDED: A simple setting dialog, you can custom some options. \nViSimulator for Notepad++ 0.3.6.838 \nADDED: Press shortcut ctrl-[ will return to NORMAL mode. \nFIXED: When caret at the end line of document, 'dd' doesn't delete the current line. \nFIXED: 'f' may failed at some situation. \nFIXED: and many other bugs fixed.</latestUpdate>
 		<stability>Broken Link</stability>
-		<install>
-			<unicode/>
-		</install>
 	</plugin>
 	<plugin name="ViSimulator for Notepad++">
 		<unicodeVersion>18.03.08</unicodeVersion>
