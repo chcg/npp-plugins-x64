@@ -4,10 +4,12 @@ image: Visual Studio 2017
 
 environment:
   matrix:
-  - PlatformToolset: v140_xp
-    PLATFORM: amd64
-    PYTHONTEST: x64
+  - PYTHONTEST: x64
     PYTHON: "C:\\Python37"
+
+  - PYTHONTEST: x32
+    PYTHON: "C:\\Python37"
+
 
 install:
     - SET PATH=%PYTHON%;%PATH%

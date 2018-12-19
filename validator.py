@@ -150,8 +150,8 @@ if bitness_from_input == 'x64':
     validateXML("plugins/plugins64.xml", "plugins/plugins64.xsd")
     parse("plugins/plugins64.xml", "plugins/validate.json")
 else:
-    #validateXML("plugins/plugins32.xml", "plugins/plugins32.xsd")
-    parse("plugins/plugins32.xml", "plugins/validate.json")
+    validateXML("validation/plugins32.xml", "validation/plugins32.xsd")
+    parse("validation/plugins32.xml", "plugins/validate.json")
 
 if has_error:
     sys.exit(-2)
